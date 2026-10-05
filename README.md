@@ -30,7 +30,21 @@ No boot a placa conecta no Wi-Fi, sincroniza o relógio por NTP e chama `/health
 | `l` | listar cobranças | 200 |
 | `s` | estresse, 20 cobranças | 20/20, com latência média |
 
-LED azul (GPIO 2): 1 piscada longa = aprovada, 3 rápidas = recusada, 6 rápidas = erro.
+### Crédito da máquina
+
+A máquina é identificada por `MACHINE_ID` no sketch (padrão `99999`). O produto de teste é o `23`, por R$ 3,50 (`PRECO_PRODUTO`).
+
+| Tecla | Teste | Esperado |
+|---|---|---|
+| `c` | consulta o crédito | `available` e valor em R$ |
+| `r` | carrega R$ 5,00 (simula pagamento finalizado) | 200 |
+| `v` | vende o produto (também pelo botão BOOT) | com crédito: LIBERADO, LED aceso 2 s, confirma `success`; sem crédito: 402, não libera |
+| `f` | vende, mas o motor "trava" | LIBERADO, confirma `failed`, o crédito volta |
+| `m` | liga/desliga o monitoramento | consulta a cada 3 s e avisa quando o crédito muda |
+
+Sem resposta válida da API, a placa **não libera** o produto (fail-closed).
+
+LED azul (GPIO 2): aceso 2 s = liberado, 1 piscada longa = aprovada, 3 rápidas = recusada ou sem crédito, 6 rápidas = erro.
 
 ## Resultado do teste (05/10/2026)
 
